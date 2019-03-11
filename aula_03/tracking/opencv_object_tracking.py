@@ -121,6 +121,8 @@ while True:
 		initBB = cv2.selectROI("Frame", frame, fromCenter=False,
 			showCrosshair=True)
 
+		print(initBB)
+
 		# start OpenCV object tracker using the supplied bounding box
 		# coordinates, then start the FPS throughput estimator as well
 		tracker.init(frame, initBB)
