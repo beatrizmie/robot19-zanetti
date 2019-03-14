@@ -34,12 +34,14 @@ Vamos criar um diretório para os programas Python:
 
     cd ~/catkin_ws/src/meu_projeto
     mkdir scripts
+    cd scripts
 
 Vamos criar nosso primeiro script (vazio inicialmente)
 
     touch roda.py
 
 Agora vamos torná-lo executável:
+
     chmod a+x roda.py
 
 Em seguida vamos editá-lo. Sugirmos usar o `subl`, que precisa ser instalado caso não exista:
@@ -50,7 +52,6 @@ Em seguida vamos editá-lo. Sugirmos usar o `subl`, que precisa ser instalado ca
 Dentro do editor cole o seguinte código para o `roda.py:
 
 ```python
-
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
 
@@ -89,7 +90,7 @@ Digite **num terminal novo**, criado depois de ter rodado o `catkin_make` acima:
 
     rosrun meu_projeto roda.py
 
-Note que o ROS encontra automaticamente seus scripts. Você não precisa de um terminal que esteja no mesmo diretório.  **Entretanto**, se seu código Python usa recuros locais (imagens, arquivos, etc) você vai precisar estar num diretório específico para executá-lo. 
+Note que o ROS encontra automaticamente seus scripts. Você não precisa de um terminal que esteja no mesmo diretório.  **Entretanto**, se seu código Python usa recursos do diretório local (imagens, arquivos, etc) você vai precisar estar num diretório específico para executá-lo. 
 
 Neste caso, para mudar de diretório faça:
 
@@ -149,7 +150,7 @@ if __name__=="__main__":
 
 Agora precisamos compilar novamente
 
-    cd ~/catkin_ws/src
+    cd ~/catkin_ws/
     catkin_make
 
 Para conseguir executar, abra **um novo terminal** e digite:
