@@ -33,7 +33,7 @@ area = 0.0
 
 tolerancia_x = 50
 tolerancia_y = 20
-ang_speed = 0.4
+ang_speed = 5
 area_ideal = 60000 # área da distancia ideal do contorno - note que varia com a resolução da câmera
 tolerancia_area = 20000
 
@@ -61,6 +61,8 @@ def roda_todo_frame(imagem):
 		antes = time.clock()
 		cv_image = bridge.compressed_imgmsg_to_cv2(imagem, "bgr8")
 		media, centro, area = cormodule.identifica_cor(cv_image)
+		print("media {},{}".format(*media))
+		print("centro {},{}".format(*centro))
 		depois = time.clock()
 		cv2.imshow("Camera", cv_image)
 	except CvBridgeError as e:
@@ -122,17 +124,39 @@ def main():
 	global buffer
 	rospy.init_node('cor_estados')
 
-	sis = smach_ros.IntrospectionServer('server_name', sm, '/SM_ROOT')
-	sis.start()
 
-	# Para usar a webcam 
-	#recebedor = rospy.Subscriber("/cv_camera/image_raw/compressed", CompressedImage, roda_todo_frame, queue_size=1, buff_size = 2**24)
-	recebedor = rospy.Subscriber("/kamera", CompressedImage, roda_todo_frame, queue_size=10, buff_size = 2**24)
+
+	topico_imagem = "/kamera"
+	
+	# Para renomear a *webcam*
+	#   Primeiro instale o suporte https://github.com/Insper/robot19/blob/master/guides/debugar_sem_robo_opencv_melodic.md
+	#
+	#	Depois faça:
+	#
+	#	rosrun cv_camera cv_camera_node
+	#
+	# 	rosrun topic_tools relay  /cv_camera/image_raw/compressed /kamera
+	#
+	# 
+	# Para renomear a câmera simulada do Gazebo
+	# 
+	# 	rosrun topic_tools relay  /camera/rgb/image_raw/compressed /kamera
+	# 
+	# Para renomear a câmera da Raspberry
+	# 
+	# 	rosrun topic_tools relay /raspicam_node/image/compressed /kamera
+	# 
+
+	recebedor = rospy.Subscriber(topico_imagem, CompressedImage, roda_todo_frame, queue_size=10, buff_size = 2**24)
+
+
 
 	velocidade_saida = rospy.Publisher("/cmd_vel", Twist, queue_size = 1)
 
 	# Create a SMACH state machine
 	sm = smach.StateMachine(outcomes=['terminei'])
+	sis = smach_ros.IntrospectionServer('server_name', sm, '/SM_ROOT')
+	sis.start()
 
 	# Open the container
 	with sm:
