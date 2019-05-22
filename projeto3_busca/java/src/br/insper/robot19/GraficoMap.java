@@ -126,17 +126,12 @@ public class GraficoMap {
 
     public static void main(String[] args) {
         GridMap map = null;
+
         try {
             map = GridMap.fromFile("map_teste.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /**
-         * Situação: mostra o mapa inicial
-         */
-        GraficoMap grafico = new GraficoMap(map);
-        grafico.desenha();
-        grafico.saveFile("Busca1.png");
 
         /**
          * Agora vamos fazer uma busca em largura
@@ -150,13 +145,68 @@ public class GraficoMap {
         int f[] = map.getGoal();
         Block g = new Block(f[0], f[1], map.getBlockType(f[0], f[1]));
 
-        // Rodando a busca
-        BuscaLargura busca = new BuscaLargura(map, sb, g);
-        RobotAction[] solucao = busca.resolver();
+
+
+        try {
+            map = GridMap.fromFile("map_teste.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /**
+         * Situação: mostra o mapa inicial
+         */
+        GraficoMap graficoL = new GraficoMap(map);
+        graficoL.desenha();
+        graficoL.saveFile("Busca1.png");
+        // Rodando a busca em Largura
+        BuscaLargura buscaL = new BuscaLargura(map, sb, g);
+        RobotAction[] solucaoL = buscaL.resolver();
 
         // Requisitando o plot da solução sobre o gráfico
-        grafico.setAndDrawSolucao(solucao);
-        grafico.saveFile("Resolvido.png");
+        graficoL.setAndDrawSolucao(solucaoL);
+        graficoL.saveFile("ResolvidoL.png");
+
+
+
+        try {
+            map = GridMap.fromFile("map_teste.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /**
+         * Situação: mostra o mapa inicial
+         */
+        GraficoMap graficoA = new GraficoMap(map);
+        graficoA.desenha();
+        graficoA.saveFile("Busca2.png");
+        // Rodando a busca A*
+        BuscaA buscaA = new BuscaA(map, sb, g);
+        RobotAction[] solucaoA = buscaA.resolver();
+
+        // Requisitando o plot da solução sobre o gráfico
+        graficoA.setAndDrawSolucao(solucaoA);
+        graficoA.saveFile("ResolvidoA.png");
+
+
+
+        try {
+            map = GridMap.fromFile("map_teste.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /**
+         * Situação: mostra o mapa inicial
+         */
+        GraficoMap graficoG = new GraficoMap(map);
+        graficoG.desenha();
+        graficoG.saveFile("Busca3.png");
+        // Rodando a busca Gulosa
+        BuscaGulosa buscaG = new BuscaGulosa(map, sb, g);
+        RobotAction[] solucaoG = buscaG.resolver();
+
+        // Requisitando o plot da solução sobre o gráfico
+        graficoG.setAndDrawSolucao(solucaoG);
+        graficoG.saveFile("ResolvidoG.png");
 
 
     }

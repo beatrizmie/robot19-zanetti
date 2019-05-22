@@ -1,6 +1,7 @@
 package br.insper.robot19;
 
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -16,6 +17,8 @@ public class BuscaLargura {
 	private Block start = null;
 	private Block end = null;
 	private GridMap map = null;
+	private HashSet<Block> blocks;
+	private String search;
 	
 	private Queue<Node> border;
 	
@@ -29,6 +32,7 @@ public class BuscaLargura {
 		this.map = map;
 		this.start = start;
 		this.end = end;
+		this.search = "Largura";
 	}
 	
 	/**
@@ -37,27 +41,31 @@ public class BuscaLargura {
 	 */
 	public Node buscar() {
 		
-		Node root = new Node(start, null, null, 0);
+		Node root = new Node(start, null, null, 0, end, search);
 		
 		//Limpa a fronteira e insere o nó raiz
 		border = new LinkedList<Node>();
 		border.add(root);
+		//Inicia o HashSet para a busca em grafo
+		blocks = new HashSet<>();
 		
 		while(!border.isEmpty()) {
 			
 			Node node = border.remove();
 			Block atual = node.getValue();
-			
-			if(atual.row == end.row && atual.col == end.col) {
-				return node;
-			
-			} else for(RobotAction acao : RobotAction.values()) {
-				
-				Block proximo = map.nextBlock(atual, acao);
-				
-				if(proximo != null && proximo.type != BlockType.WALL) {
-					Node novoNode = new Node(proximo, node, acao, proximo.type.cost);
-					border.add(novoNode);
+
+			if(!blocks.contains(atual)){
+				blocks.add(atual);
+				if(atual.row == end.row && atual.col == end.col) {
+					return node;
+				} else for(RobotAction acao : RobotAction.values()) {
+
+					Block proximo = map.nextBlock(atual, acao);
+
+					if(proximo != null && proximo.type != BlockType.WALL) {
+						Node novoNode = new Node(proximo, node, acao, proximo.type.cost, end, search);
+						border.add(novoNode);
+					}
 				}
 			}
 		}
