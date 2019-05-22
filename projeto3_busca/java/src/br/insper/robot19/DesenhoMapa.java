@@ -1,20 +1,19 @@
 package br.insper.robot19;
 
 import java.awt.*;
-import java.io.IOException;
 
-public class GraficoMap {
-    GridMap map;
-    int width;
-    int height;
-    Canvas screen;
-    //BufferedImage imagem;
-
+public class DesenhoMapa {
+    private GridMap map;
+    private int width;
+    private int height;
+    private Canvas screen;
+    private int sqx;
+    private int sqy;
     /**
      *
      * @param g Um objeto do itpo GridMap
      */
-    public GraficoMap (GridMap g){
+    public DesenhoMapa (GridMap g){
         this(g, 800, 600    );
     }
 
@@ -24,10 +23,12 @@ public class GraficoMap {
      * @param width A largura desejada para a janela
      * @param height A altura desejada para a janela
      */
-    public GraficoMap(GridMap g, int width, int height){
+    public DesenhoMapa(GridMap g, int width, int height){
         this.map = g;
         this.width = width;
         this.height = height;
+        this.sqx = this.width/map.getHeight();
+        this.sqy = this.height/map.getWidth();
         screen = new Canvas("Proj 3 Busca", this.width, this.height, Color.lightGray);
 
     }
@@ -41,8 +42,6 @@ public class GraficoMap {
         int h = map.getHeight();
         int w = map.getWidth();
 
-        int sqx = this.width/w;
-        int sqy = this.height/h;
 
 
         for (int i=0; i < h; i ++ ){
@@ -76,6 +75,22 @@ public class GraficoMap {
 
         screen.setForegroundColor(Color.RED);
         screen.fillCircle(goal[1]*sqx+sqx/4, goal[0]*sqy+sqy/4, sqx/2);
+
+    }
+    /**
+     * Desenha no gráfica do mapa os blocos que ainda estão na fila, ou seja, na fronteira
+
+     */
+    public void desenhaFronteira(Node node){
+        screen.setForegroundColor(Color.BLUE);
+        screen.fillRectangle(node.getValue().row*sqx, node.getValue().col*sqy, sqx-2, sqy-2);
+
+    }
+    /**
+     * Desenha no gráfica do mapa os blocos que já foram visitados
+
+     */
+    public void desenhaVisitados(){
 
     }
 
@@ -121,93 +136,6 @@ public class GraficoMap {
 
         screen.setForegroundColor(Color.GREEN);
         screen.drawLine(atual.col*sqx + sqx/2, atual.row*sqy + sqy/2, next.col*sqx + sqx/2, next.row*sqy + sqy/2);
-
-    }
-
-    public static void main(String[] args) {
-        GridMap map = null;
-
-        try {
-            map = GridMap.fromFile("map_teste.txt");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        /**
-         * Agora vamos fazer as buscas
-         */
-
-        // Bloco inicial
-        int s[] = map.getStart();
-        Block sb = new Block(s[0], s[1], map.getBlockType(s[0], s[1]));
-
-        // Bloco final
-        int f[] = map.getGoal();
-        Block g = new Block(f[0], f[1], map.getBlockType(f[0], f[1]));
-
-
-
-        try {
-            map = GridMap.fromFile("map_teste.txt");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        /**
-         * Situação: mostra o mapa inicial
-         */
-        GraficoMap graficoL = new GraficoMap(map);
-        graficoL.desenha();
-        graficoL.saveFile("Busca1.png");
-        // Rodando a busca em Largura
-        BuscaLargura buscaL = new BuscaLargura(map, sb, g);
-        RobotAction[] solucaoL = buscaL.resolver();
-
-        // Requisitando o plot da solução sobre o gráfico
-        graficoL.setAndDrawSolucao(solucaoL);
-        graficoL.saveFile("ResolvidoL.png");
-
-
-
-        try {
-            map = GridMap.fromFile("map_teste.txt");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        /**
-         * Situação: mostra o mapa inicial
-         */
-        GraficoMap graficoA = new GraficoMap(map);
-        graficoA.desenha();
-        graficoA.saveFile("Busca2.png");
-        // Rodando a busca A*
-        BuscaA buscaA = new BuscaA(map, sb, g);
-        RobotAction[] solucaoA = buscaA.resolver();
-
-        // Requisitando o plot da solução sobre o gráfico
-        graficoA.setAndDrawSolucao(solucaoA);
-        graficoA.saveFile("ResolvidoA.png");
-
-
-
-        try {
-            map = GridMap.fromFile("map_teste.txt");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        /**
-         * Situação: mostra o mapa inicial
-         */
-        GraficoMap graficoG = new GraficoMap(map);
-        graficoG.desenha();
-        graficoG.saveFile("Busca3.png");
-        // Rodando a busca Gulosa
-        BuscaGulosa buscaG = new BuscaGulosa(map, sb, g);
-        RobotAction[] solucaoG = buscaG.resolver();
-
-        // Requisitando o plot da solução sobre o gráfico
-        graficoG.setAndDrawSolucao(solucaoG);
-        graficoG.saveFile("ResolvidoG.png");
-
 
     }
 }

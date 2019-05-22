@@ -16,6 +16,7 @@ public class BuscaA {
     private HashSet<Block> blocks;
     private String search;
 
+    private DesenhoMapa drawing;
     private PriorityQueue<Node> border;
 
     /**
@@ -29,6 +30,9 @@ public class BuscaA {
         this.start = start;
         this.end = end;
         this.search = "A";
+        this.drawing = new DesenhoMapa(map);
+        drawing.desenha();
+        drawing.saveFile("Busca" + search + ".png");
     }
 
     /**
@@ -49,6 +53,7 @@ public class BuscaA {
 
             Node node = border.remove();
             Block atual = node.getValue();
+            drawing.desenhaFronteira(node);
 
             if(!blocks.contains(atual)){
                 blocks.add(atual);
@@ -89,6 +94,11 @@ public class BuscaA {
             caminho.addFirst(atual.getAction());
             atual = atual.getParent();
         }
-        return caminho.toArray(new RobotAction[caminho.size()]);
+        RobotAction[] solucao = caminho.toArray(new RobotAction[caminho.size()]);
+        drawing.setAndDrawSolucao(solucao);
+        drawing.saveFile("ResolvidoG.png");
+
+        return solucao;
+
     }
 }
