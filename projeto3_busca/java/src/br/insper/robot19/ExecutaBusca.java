@@ -1,6 +1,9 @@
 package br.insper.robot19;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.LinkedList;
+import java.util.List;
 
 import br.insper.robot19.vrep.VrepRobot;
 import br.insper.robot19.vrep.VrepSimulator;
@@ -14,6 +17,8 @@ public class ExecutaBusca {
 		
 		//Carrega o arquivo a partir do arquivo	
 		GridMap map;
+		GridMap newMap;
+		LinkedList<String> buscas = new LinkedList<>();
 		try {
 			map = GridMap.fromFile("map_teste.txt");
 		} catch (IOException e) {
@@ -32,27 +37,52 @@ public class ExecutaBusca {
 		int[] rowColFim = map.getGoal();
 		Block inicial = new Block(rowColIni[0], rowColIni[1], BlockType.FREE) ;
 		Block alvo = new Block(rowColFim[0], rowColFim[1], BlockType.FREE) ;
-		BuscaLargura busca = new BuscaLargura(map, inicial, alvo);
-		RobotAction[] solucao = busca.resolver();
-		
-		//Mostra a solução
-		if(solucao == null) {
-			System.out.println("Nao foi encontrada solucao para o problema");
-		} else {
-			
-			Block atual = inicial;
-			System.out.print("Solução: ");
-			for(RobotAction a : solucao) {
-				System.out.print(", " + a);
-				Block next = map.nextBlock(atual, a);
-				map.setRoute(next.row, next.col);
-				atual = next;
+		//Busca A*
+		BuscaA buscaA = new BuscaA(map, inicial, alvo);
+		RobotAction[] solucaoA = buscaA.resolver();
+		//Busca Gulosa
+		BuscaGulosa buscaG = new BuscaGulosa(map, inicial, alvo);
+		RobotAction[] solucaoG = buscaG.resolver();
+		//Busca em LArgura
+		BuscaLargura buscaL = new BuscaLargura(map, inicial, alvo);
+		RobotAction[] solucaoL = buscaL.resolver();
+
+		LinkedList<RobotAction[]> solucoes = new LinkedList<>();
+		solucoes.add(solucaoA);
+		buscas.add("A*");
+		solucoes.add(solucaoG);
+		buscas.add("Gulosa");
+		solucoes.add(solucaoL);
+		buscas.add("em Largura");
+
+
+
+		for(int i =0; i < solucoes.size(); i++) {
+			RobotAction[] solucao = solucoes.get(i);
+			try {
+				newMap = GridMap.fromFile("map_teste.txt");
+			} catch (IOException e) {
+				throw new RuntimeException(e);
 			}
-			
-			//Mostra o mapa com a rota encontrada
-			System.out.println();
-			System.out.println("Rota encontrada:");
-			System.out.println(map);
+			//Mostra a solução
+			if (solucao == null) {
+				System.out.println("Nao foi encontrada solucao para o problema");
+			} else {
+
+				Block atual = inicial;
+				System.out.print("Solução busca " + buscas.get(i) + ": ");
+				for (RobotAction action : solucao) {
+					System.out.print(", " + action);
+					Block next = newMap.nextBlock(atual, action);
+					newMap.setRoute(next.row, next.col);
+					atual = next;
+				}
+
+				//Mostra o mapa com a rota encontrada
+				System.out.println();
+				System.out.println("Rota encontrada:");
+				System.out.println(newMap);
+			}
 		}
 	}
 }
