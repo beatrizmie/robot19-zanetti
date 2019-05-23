@@ -1,20 +1,21 @@
 package br.insper.robot19;
 
+import br.insper.robot19.block.Block;
+
 import java.awt.*;
 
 public class DesenhoMapa {
     private GridMap map;
     private int width;
     private int height;
-    private Canvas screen;
-    private int sqx;
-    private int sqy;
+    private br.insper.robot19.Canvas screen;
+
     /**
      *
      * @param g Um objeto do itpo GridMap
      */
-    public DesenhoMapa (GridMap g){
-        this(g, 800, 600    );
+    public DesenhoMapa (GridMap g, String busca){
+        this(g, 800, 600, busca);
     }
 
     /**
@@ -23,13 +24,11 @@ public class DesenhoMapa {
      * @param width A largura desejada para a janela
      * @param height A altura desejada para a janela
      */
-    public DesenhoMapa(GridMap g, int width, int height){
+    public DesenhoMapa(GridMap g, int width, int height, String busca){
         this.map = g;
         this.width = width;
         this.height = height;
-        this.sqx = this.width/map.getHeight();
-        this.sqy = this.height/map.getWidth();
-        screen = new Canvas("Proj 3 Busca", this.width, this.height, Color.lightGray);
+        screen = new Canvas("Proj 3 Busca " + busca, this.width, this.height, Color.lightGray);
 
     }
 
@@ -41,6 +40,9 @@ public class DesenhoMapa {
     public void desenha(){
         int h = map.getHeight();
         int w = map.getWidth();
+
+        int sqx = this.width/w;
+        int sqy = this.height/h;
 
 
 
@@ -69,28 +71,49 @@ public class DesenhoMapa {
 
         int[] goal = map.getGoal();
         int[] start = map.getStart();
+        int div = 2000;
 
-        screen.setForegroundColor(Color.GREEN);
-        screen.fillCircle(start[1]*sqx+sqx/4, start[0]*sqy+sqy/4, sqx/2);
+        screen.setForegroundColor(Color.BLACK);
+        screen.fillCircle(start[1]*sqx+sqx/div, start[0]*sqy+sqy/div, sqx);
 
-        screen.setForegroundColor(Color.RED);
-        screen.fillCircle(goal[1]*sqx+sqx/4, goal[0]*sqy+sqy/4, sqx/2);
+        screen.setForegroundColor(Color.CYAN);
+        screen.fillCircle(goal[1]*sqx+sqx/div, goal[0]*sqy+sqy/div, sqx);
 
     }
     /**
      * Desenha no gráfica do mapa os blocos que ainda estão na fila, ou seja, na fronteira
 
      */
-    public void desenhaFronteira(Node node){
-        screen.setForegroundColor(Color.BLUE);
-        screen.fillRectangle(node.getValue().row*sqx, node.getValue().col*sqy, sqx-2, sqy-2);
+    public void desenhaFronteira(Block block){
+        int h = map.getHeight();
+        int w = map.getWidth();
+
+        int sqx = this.width/w;
+        int sqy = this.height/h;
+
+        screen.setForegroundColor(Color.GREEN);
+        screen.fillCircle(block.col*sqx+sqx/4, block.row*sqy+sqy/4, sqx/2);
+
+        //screen.setForegroundColor(Color.BLUE);
+        //screen.fillRectangle(node.getValue().row*sqx, node.getValue().col*sqy, sqx-2, sqy-2);
 
     }
     /**
      * Desenha no gráfica do mapa os blocos que já foram visitados
 
      */
-    public void desenhaVisitados(){
+    public void desenhaVisitados(Block block){
+        int h = map.getHeight();
+        int w = map.getWidth();
+
+        int sqx = this.width/w;
+        int sqy = this.height/h;
+
+        screen.setForegroundColor(Color.RED);
+        screen.fillCircle(block.col*sqx+sqx/4, block.row*sqy+sqy/4, sqx/2);
+
+        //screen.setForegroundColor(Color.BLUE);
+        //screen.fillRectangle(node.getValue().row*sqx, node.getValue().col*sqy, sqx-2, sqy-2);
 
     }
 

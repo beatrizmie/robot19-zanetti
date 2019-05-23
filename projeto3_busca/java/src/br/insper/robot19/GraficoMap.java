@@ -1,5 +1,10 @@
 package br.insper.robot19;
 
+import br.insper.robot19.block.Block;
+import br.insper.robot19.busca.BuscaA;
+import br.insper.robot19.busca.BuscaGulosa;
+import br.insper.robot19.busca.BuscaLargura;
+
 import java.awt.*;
 import java.io.IOException;
 
@@ -40,6 +45,7 @@ public class GraficoMap {
     public void desenha(){
         int h = map.getHeight();
         int w = map.getWidth();
+
 
         int sqx = this.width/w;
         int sqy = this.height/h;

@@ -1,13 +1,13 @@
 package br.insper.robot19;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.LinkedList;
-import java.util.List;
 
-import br.insper.robot19.vrep.VrepRobot;
-import br.insper.robot19.vrep.VrepSimulator;
-import br.insper.robot19.vrep.VrepWorld;
+import br.insper.robot19.block.Block;
+import br.insper.robot19.block.BlockType;
+import br.insper.robot19.busca.BuscaA;
+import br.insper.robot19.busca.BuscaGulosa;
+import br.insper.robot19.busca.BuscaLargura;
 
 public class ExecutaBusca {
 

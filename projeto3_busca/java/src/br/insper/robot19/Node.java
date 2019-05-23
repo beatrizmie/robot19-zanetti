@@ -1,5 +1,7 @@
 package br.insper.robot19;
 
+import br.insper.robot19.block.Block;
+
 public class Node implements Comparable<Node>{
 	private Block value;
 	private Block end;
