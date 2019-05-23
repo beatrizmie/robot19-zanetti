@@ -1,7 +1,5 @@
 package br.insper.robot19;
 
-import br.insper.robot19.block.Block;
-
 import java.awt.*;
 
 public class DesenhoMapa {

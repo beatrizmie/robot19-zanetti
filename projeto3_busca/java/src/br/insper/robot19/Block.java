@@ -1,4 +1,4 @@
-package br.insper.robot19.block;
+package br.insper.robot19;
 
 public class Block {
 	

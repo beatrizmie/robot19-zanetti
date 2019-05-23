@@ -1,8 +1,8 @@
-package br.insper.robot19.busca;
+package br.insper.robot19;
 
 import br.insper.robot19.*;
-import br.insper.robot19.block.Block;
-import br.insper.robot19.block.BlockType;
+import br.insper.robot19.Block;
+import br.insper.robot19.BlockType;
 import br.insper.robot19.DesenhoMapa;
 import br.insper.robot19.GridMap;
 
@@ -84,9 +84,9 @@ public class BuscaA {
                     }
                 }
                 drawing.desenhaVisitados(atual);//Vermelho
+                drawing.saveFile("Busca" + search + counter + ".png");
+                counter += 1;
             }
-            drawing.saveFile("Busca" + search + counter + ".png");
-            counter += 1;
         }
         return null;
     }

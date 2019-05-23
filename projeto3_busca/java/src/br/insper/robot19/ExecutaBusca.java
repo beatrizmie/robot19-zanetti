@@ -3,12 +3,6 @@ package br.insper.robot19;
 import java.io.IOException;
 import java.util.LinkedList;
 
-import br.insper.robot19.block.Block;
-import br.insper.robot19.block.BlockType;
-import br.insper.robot19.busca.BuscaA;
-import br.insper.robot19.busca.BuscaGulosa;
-import br.insper.robot19.busca.BuscaLargura;
-
 public class ExecutaBusca {
 
 	private static float cellSize = 0.5f; //m

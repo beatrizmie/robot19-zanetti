@@ -1,9 +1,5 @@
 package br.insper.robot19;
 
-import br.insper.robot19.block.Block;
-import br.insper.robot19.block.BlockStatus;
-import br.insper.robot19.block.BlockType;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
