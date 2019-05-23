@@ -1,5 +1,9 @@
 package br.insper.robot19;
 
+import br.insper.robot19.block.Block;
+import br.insper.robot19.block.BlockStatus;
+import br.insper.robot19.block.BlockType;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,7 +16,7 @@ public class GridMap {
 	public static final float DEFAULT_CELL_SIZE = 1.0f;
 	
 	private final BlockType[][] grid;
-	private final BlockStatus[][] path; 
+	private final BlockStatus[][] path;
 	private final float cellSize;
 	private final float minX;
 	private final float minY;

@@ -1,4 +1,9 @@
-package br.insper.robot19;
+package br.insper.robot19.busca;
+
+import br.insper.robot19.*;
+import br.insper.robot19.block.Block;
+import br.insper.robot19.block.BlockType;
+import br.insper.robot19.GridMap;
 
 import java.util.*;
 
@@ -8,14 +13,16 @@ import java.util.*;
  * @author antonio
  *
  */
-public class BuscaA {
+public class BuscaGulosa {
 
     private Block start = null;
     private Block end = null;
     private GridMap map = null;
     private HashSet<Block> blocks;
     private String search;
+    private int counter;
 
+    private DesenhoMapa drawing;
     private PriorityQueue<Node> border;
 
     /**
@@ -24,11 +31,14 @@ public class BuscaA {
      * @param start - ponto inicial
      * @param end - ponto final
      */
-    public BuscaA(GridMap map, Block start, Block end) {
+    public BuscaGulosa(GridMap map, Block start, Block end) {
         this.map = map;
         this.start = start;
         this.end = end;
-        this.search = "A";
+        this.search = "Gulosa";
+        this.drawing = new DesenhoMapa(map, search);
+        drawing.desenha();
+        drawing.saveFile("Busca" + search + ".png");
     }
 
     /**
@@ -50,9 +60,14 @@ public class BuscaA {
             Node node = border.remove();
             Block atual = node.getValue();
 
+
+
+
             if(!blocks.contains(atual)){
                 blocks.add(atual);
+
                 if(atual.row == end.row && atual.col == end.col) {
+                    drawing.desenhaVisitados(atual);//Vermelho
                     return node;
                 } else for(RobotAction acao : RobotAction.values()) {
 
@@ -61,9 +76,15 @@ public class BuscaA {
                     if(proximo != null && proximo.type != BlockType.WALL) {
                         Node novoNode = new Node(proximo, node, acao, proximo.type.cost, end, search);
                         border.add(novoNode);
+                        if(!blocks.contains(proximo)){
+                            drawing.desenhaFronteira(proximo);//Verde
+                        }
                     }
                 }
+                drawing.desenhaVisitados(atual);//Vermelho
             }
+            drawing.saveFile("Busca" + search + counter + ".png");
+            counter += 1;
         }
         return null;
     }
@@ -89,6 +110,10 @@ public class BuscaA {
             caminho.addFirst(atual.getAction());
             atual = atual.getParent();
         }
+        RobotAction[] solucao = caminho.toArray(new RobotAction[caminho.size()]);
+        drawing.setAndDrawSolucao(solucao);
+        drawing.saveFile("Resolvido" + search + ".png");
+
         return caminho.toArray(new RobotAction[caminho.size()]);
     }
 }

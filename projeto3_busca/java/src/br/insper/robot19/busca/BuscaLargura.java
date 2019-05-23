@@ -1,4 +1,9 @@
-package br.insper.robot19;
+package br.insper.robot19.busca;
+
+import br.insper.robot19.*;
+import br.insper.robot19.block.Block;
+import br.insper.robot19.block.BlockType;
+import br.insper.robot19.GridMap;
 
 import java.util.Deque;
 import java.util.HashSet;
@@ -19,7 +24,9 @@ public class BuscaLargura {
 	private GridMap map = null;
 	private HashSet<Block> blocks;
 	private String search;
-	
+	private int counter;
+
+	private DesenhoMapa drawing;
 	private Queue<Node> border;
 	
 	/**
@@ -33,6 +40,9 @@ public class BuscaLargura {
 		this.start = start;
 		this.end = end;
 		this.search = "Largura";
+		this.drawing = new DesenhoMapa(map, search);
+		drawing.desenha();
+		drawing.saveFile("Busca" + search + ".png");
 	}
 	
 	/**
@@ -48,15 +58,20 @@ public class BuscaLargura {
 		border.add(root);
 		//Inicia o HashSet para a busca em grafo
 		blocks = new HashSet<>();
-		
+
 		while(!border.isEmpty()) {
-			
+
 			Node node = border.remove();
 			Block atual = node.getValue();
 
+
+
+
 			if(!blocks.contains(atual)){
 				blocks.add(atual);
+
 				if(atual.row == end.row && atual.col == end.col) {
+					drawing.desenhaVisitados(atual);//Vermelho
 					return node;
 				} else for(RobotAction acao : RobotAction.values()) {
 
@@ -65,9 +80,15 @@ public class BuscaLargura {
 					if(proximo != null && proximo.type != BlockType.WALL) {
 						Node novoNode = new Node(proximo, node, acao, proximo.type.cost, end, search);
 						border.add(novoNode);
+						if(!blocks.contains(proximo)){
+							drawing.desenhaFronteira(proximo);//Verde
+						}
 					}
 				}
+				drawing.desenhaVisitados(atual);//Vermelho
 			}
+			drawing.saveFile("Busca" + search + counter + ".png");
+			counter += 1;
 		}
 		return null;
 	}
@@ -93,6 +114,10 @@ public class BuscaLargura {
 			caminho.addFirst(atual.getAction());
 			atual = atual.getParent();
 		}
+		RobotAction[] solucao = caminho.toArray(new RobotAction[caminho.size()]);
+		drawing.setAndDrawSolucao(solucao);
+		drawing.saveFile("Resolvido" + search + ".png");
+
 		return caminho.toArray(new RobotAction[caminho.size()]);
 	}
 }
